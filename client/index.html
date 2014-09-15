@@ -1,0 +1,187 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <base href="/">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css(client) app/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.min.css" />
+  <link rel="stylesheet" href="bower_components/toastr/toastr.css" />
+  <link rel="stylesheet" href="bower_components/datetimepicker/jquery.datetimepicker.css" />
+  <link rel="stylesheet" href="bower_components/animate.css/animate.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-daterangepicker/daterangepicker-bs3.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
+  <link rel="stylesheet" href="bower_components/nouislider/jquery.nouislider.css" />
+  <link rel="stylesheet" href="bower_components/nanoscroller/bin/css/nanoscroller.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css({.tmp,client}) app/app.css -->
+  <script src="assets/lib/ng-tags-input/ng-tags-input.css"></script>
+  <script src="assets/lib/nanoscroller/nanoscroller/bin/css/nanoscroller.css"></script>
+  <script src="assets/css/application.css"></script>
+  <script src="assets/css/overlay.css"></script>
+  <script src="assets/css/simptip.css"></script>
+  <script src="assets/css/animations.css"></script>
+  <!-- injector:css -->
+  <link rel="stylesheet" href="app/app.css">
+  <!-- endinjector -->
+  <!-- endbuild -->
+</head>
+<body ng-app="app">
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+<div ng-class="{'overlay-open':overlayIsOpen}" id="all">
+  <div ng-include="'shell/shell.html'"></div>
+  <div class="content container">
+    <div ng-view></div>
+  </div>
+</div>
+<div ng-show="showSpinner" class="spin">
+  <span us-spinner="{lines:15,color: '#fff', width:2, length:15, radius:15, hwaccel: true, speed:1.4}"></span>
+</div>
+<div style="display: none" class="overlay overlay-contentscale map-overlay" ng-class="{open:overlayIsOpen}" ng-cloak="ng-cloak">
+  <a id="overlay-close" ng-click="closeMap();" href="javascript:void(0)">
+    <i class="fa fa-times fa-4x"></i>
+  </a>
+  <a id="overlay-save" ng-show="showPlacesInput" ng-click="saveLocation()" href="javascript:void(0)">
+    <i class="fa fa-check fa-4x"></i>
+  </a>
+
+  <div ng-show="showPlacesInput" id="placeInput">
+    <input id="pac-input" class="controls" ng-autocomplete ng-enter="refreshMap()" ng-model="placePicker.place" details="placePicker.details" type="text" placeholder="{{'ENTER_LOCATION'|translate}}"/>
+      <span class="input-group-btn">
+      </span>
+  </div>
+  <gm-map gm-map-id="'myMap'" gm-center="mapCenter" gm-zoom="zoom" style="height:100%;width:100%;">
+    <gm-markers gm-marker-options="object.options()" gm-objects="markers" gm-id="object.id" gm-on-dragend="setMarkerLocation(marker)" gm-position="{lat: object.location.lat, lng: object.location.lng}">
+    </gm-markers>
+  </gm-map>
+</div>
+<div style="display: none" class="overlay overlay-contentscale imageOverlay" ng-class="{open:showImage}">
+  <a id="overlay-close" ng-click="closeImageOverlay();" href="javascript:void(0)">
+    <i class="fa fa-times fa-4x"></i>
+  </a>
+
+  <div class="imageContainer">
+    <img ng-src="{{imgUrl}}" alt=""/>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript " src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false "></script>
+
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+  ga('create', 'UA-XXXXX-X');
+  ga('send', 'pageview');
+</script>
+
+<!--[if lt IE 9]>
+<script src="bower_components/es5-shim/es5-shim.js"></script>
+<script src="bower_components/json3/lib/json3.min.js"></script>
+<![endif]-->
+
+<!-- build:js({client,node_modules}) app/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-loader/angular-loader.js"></script>
+<script src="bower_components/angular-mocks/angular-mocks.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/ng-tags-input/ng-tags-input.min.js"></script>
+<script src="bower_components/toastr/toastr.js"></script>
+<script src="bower_components/datetimepicker/jquery.datetimepicker.js"></script>
+<script src="bower_components/ngAutocomplete/src/ngAutocomplete.js"></script>
+<script src="bower_components/AngularGM/angular-gm.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-translate/angular-translate.js"></script>
+<script src="bower_components/request/request.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
+<script src="bower_components/angular-inview/angular-inview.js"></script>
+<script src="bower_components/angular-dynamic-locale/src/tmhDynamicLocale.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<script src="bower_components/ng-bs-daterangepicker/src/ng-bs-daterangepicker.js"></script>
+<script src="bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
+<script src="bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
+<script src="bower_components/transitionize/dist/transitionize.js"></script>
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
+<script src="bower_components/switchery/dist/switchery.js"></script>
+<script src="bower_components/ng-switchery/src/ng-switchery.js"></script>
+<script src="bower_components/angularjs-geolocation/src/geolocation.js"></script>
+<script src="bower_components/angular-local-storage/angular-local-storage.js"></script>
+<script src="bower_components/angular-touch/angular-touch.js"></script>
+<script src="bower_components/d3/d3.js"></script>
+<script src="bower_components/n3-line-chart/dist/line-chart.min.js"></script>
+<script src="bower_components/nouislider/jquery.nouislider.min.js"></script>
+<script src="bower_components/angular-nouislider/src/nouislider.js"></script>
+<script src="bower_components/jqrangeslider/jqrangeslider.js"></script>
+<script src="bower_components/jquery-ui/jquery-ui.js"></script>
+<script src="bower_components/quick-ngrepeat/quick-ng-repeat.js"></script>
+<script src="bower_components/nanoscroller/bin/javascripts/jquery.nanoscroller.js"></script>
+<script src="bower_components/angular-nanoscroller/scrollable.js"></script>
+<script src="bower_components/momentjs/moment.js"></script>
+<script src="bower_components/jquery-debounce/jquery.debounce.js"></script>
+<script src="bower_components/spin.js/spin.js"></script>
+<script src="bower_components/angular-spinner/angular-spinner.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+<!-- build:js({.tmp,client}) app/app.js -->
+<script src="app/app.js"></script>
+<script src="assets/lib/nanoscroller/jquery.nanoscroller.js"></script>
+<script src="assets/lib/angular-nanoscroller/scrollable.js"></script>
+<script src="assets/lib/jquery-debounce/jquery.debounce.js"></script>
+<script src="assets/lib/jQAllRangeSliders-min.js"></script>
+<script src="assets/lib/angular-ui-mask/ng-mask.js"></script>
+<script src="assets/lib/modernizr-custom.js"></script>
+<script src="assets/lib/bootstrap/tooltip.js"></script>
+<script src="assets/lib/bootstrap/popover.js"></script>
+<script src="assets/lib/bootstrap-slider-3.0.1/bootstrap-slider.js"></script>
+<script src="assets/lib/ng-tags-input/ng-tags-input.js"></script>
+<script src="assets/lib/ng-bs-daterangepicker/src/ng-bs-daterangepicker.js"></script>
+<!-- injector:js -->
+<script src="app/authInterceptor/authInterceptor.service.js"></script>
+<script src="app/common/common.service.js"></script>
+<script src="app/config.exceptionHandler.js"></script>
+<script src="app/config.js"></script>
+<script src="app/config.route.js"></script>
+<script src="app/datacontext/datacontext.service.js"></script>
+<script src="app/date/date.service.js"></script>
+<script src="app/debounce/debounce.service.js"></script>
+<script src="app/directives/directives.directive.js"></script>
+<script src="app/logger/logger.service.js"></script>
+<script src="app/login/login.controller.js"></script>
+<script src="app/loginService/loginService.service.js"></script>
+<script src="app/map/map.service.js"></script>
+<script src="app/rcolor/rcolor.service.js"></script>
+<script src="app/settings/settings.controller.js"></script>
+<script src="app/shell/shell.controller.js"></script>
+<script src="app/stats/stats.controller.js"></script>
+<script src="app/statsService/statsService.service.js"></script>
+<script src="app/transactions/transactions.controller.js"></script>
+<script src="app/transaxns/transaxns.service.js"></script>
+<script src="app/translations.js"></script>
+<!-- endinjector -->
+<!-- endbuild -->
+</body>
+</html>
