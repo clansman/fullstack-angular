@@ -21,32 +21,26 @@
     return [{
       url: '/',
       config: {
-        templateUrl: 'transactions/transactions.html',
+        templateUrl: 'app/transactions/transactions.html',
         title: 'transactions'
       }
 
     }, {
       url: '/login',
       config: {
-        templateUrl: 'login/login.html',
+        templateUrl: 'app/login/login.html',
         title: 'login'
-      }
-    }, {
-      url: '/quickpass',
-      config: {
-        templateUrl: 'quickpass/quickpass.html',
-        title: 'quickpass'
       }
     }, {
       url: '/settings',
       config: {
-        templateUrl: 'settings/settings.html',
+        templateUrl: 'app/settings/settings.html',
         title: 'settings'
       }
     }, {
       url: '/stats',
       config: {
-        templateUrl: 'stats/stats.html',
+        templateUrl: 'app/stats/stats.html',
         title: 'stats'
       }
       // }, {
